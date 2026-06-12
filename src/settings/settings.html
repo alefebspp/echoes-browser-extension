@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Echoes Settings</title>
+    <link rel="stylesheet" href="settings.css" />
+  </head>
+  <body>
+    <main class="container">
+      <header class="header">
+        <h1>Echoes</h1>
+        <p class="subtitle">Browse memory extension — privacy-first event capture</p>
+      </header>
+
+      <section class="card" id="consent-section">
+        <h2>Privacy &amp; consent</h2>
+        <p class="muted">
+          Echoes collects only the page URL, page title, and timestamp when you visit a site.
+          No page content, form data, cookies, or passwords are ever collected.
+        </p>
+        <label class="toggle-row">
+          <input type="checkbox" id="consent-checkbox" />
+          <span>I consent to collecting basic browsing events</span>
+        </label>
+      </section>
+
+      <section class="card" id="tracking-section">
+        <h2>Tracking</h2>
+        <label class="toggle-row">
+          <input type="checkbox" id="tracking-checkbox" />
+          <span>Enable browsing event capture</span>
+        </label>
+        <p class="status" id="tracking-status"></p>
+      </section>
+
+      <section class="card" id="auth-section">
+        <h2>Authentication</h2>
+        <form id="login-form">
+          <label>
+            Email
+            <input type="email" id="email-input" placeholder="you@example.com" required />
+          </label>
+          <label>
+            Password
+            <input type="password" id="password-input" placeholder="••••••••" required />
+          </label>
+          <button type="submit" id="login-button">Sign in</button>
+        </form>
+        <div id="auth-status" class="status hidden"></div>
+        <button type="button" id="logout-button" class="secondary hidden">Sign out</button>
+      </section>
+
+      <section class="card">
+        <h2>API configuration</h2>
+        <label>
+          Echoes API base URL
+          <input type="url" id="api-url-input" placeholder="http://localhost:3847" />
+        </label>
+        <button type="button" id="save-api-url-button" class="secondary">Save API URL</button>
+        <p class="muted">For local testing, run <code>npm run mock-server</code> and use the default URL.</p>
+      </section>
+
+      <section class="card">
+        <h2>Queue status</h2>
+        <p id="queue-stats" class="status">Loading…</p>
+        <button type="button" id="flush-queue-button" class="secondary">Flush queue now</button>
+      </section>
+
+      <section class="card">
+        <h2>Recent events (local)</h2>
+        <p class="muted">Events stored locally for transparency. Sent events remain here until you clear them.</p>
+        <ul id="event-log" class="event-log"></ul>
+        <button type="button" id="clear-log-button" class="secondary">Clear local log</button>
+      </section>
+    </main>
+
+    <script type="module" src="settings.ts"></script>
+  </body>
+</html>
