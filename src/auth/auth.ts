@@ -1,4 +1,9 @@
-import { STORAGE_KEYS, DEFAULT_API_BASE_URL } from "../shared/constants";
+import {
+  STORAGE_KEYS,
+  DEFAULT_API_BASE_URL,
+  BUILTIN_API_BASE_URL,
+  IS_API_BASE_URL_LOCKED,
+} from "../shared/constants";
 
 export type AuthState = {
   token: string | null;
@@ -6,6 +11,10 @@ export type AuthState = {
 };
 
 export async function getApiBaseUrl(): Promise<string> {
+  if (IS_API_BASE_URL_LOCKED) {
+    return BUILTIN_API_BASE_URL;
+  }
+
   const result = await chrome.storage.local.get(STORAGE_KEYS.API_BASE_URL);
   return (result[STORAGE_KEYS.API_BASE_URL] as string | undefined) ?? DEFAULT_API_BASE_URL;
 }

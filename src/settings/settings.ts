@@ -6,7 +6,7 @@ import {
   setApiBaseUrl,
 } from "../auth/auth";
 import { flushQueue, getLocalEventLog, getQueueStats, clearQueue } from "../events/event-queue";
-import { DEFAULT_API_BASE_URL, STORAGE_KEYS } from "../shared/constants";
+import { DEFAULT_API_BASE_URL, IS_API_BASE_URL_LOCKED, STORAGE_KEYS } from "../shared/constants";
 import type { WebVisitEvent } from "../events/event-types";
 
 const consentCheckbox = document.getElementById("consent-checkbox") as HTMLInputElement;
@@ -18,6 +18,7 @@ const passwordInput = document.getElementById("password-input") as HTMLInputElem
 const loginButton = document.getElementById("login-button") as HTMLButtonElement;
 const authStatus = document.getElementById("auth-status")!;
 const logoutButton = document.getElementById("logout-button") as HTMLButtonElement;
+const apiConfigSection = document.getElementById("api-config-section")!;
 const apiUrlInput = document.getElementById("api-url-input") as HTMLInputElement;
 const saveApiUrlButton = document.getElementById("save-api-url-button") as HTMLButtonElement;
 const queueStats = document.getElementById("queue-stats")!;
@@ -26,6 +27,10 @@ const eventLog = document.getElementById("event-log")!;
 const clearLogButton = document.getElementById("clear-log-button") as HTMLButtonElement;
 
 async function loadSettings(): Promise<void> {
+  if (IS_API_BASE_URL_LOCKED) {
+    apiConfigSection.classList.add("hidden");
+  }
+
   const stored = await chrome.storage.local.get([
     STORAGE_KEYS.CONSENT_GIVEN,
     STORAGE_KEYS.TRACKING_ENABLED,

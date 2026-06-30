@@ -9,6 +9,12 @@ export const STORAGE_KEYS = {
 
 export const DEFAULT_API_BASE_URL = "http://localhost:3847";
 
+/** Set at build time via VITE_API_BASE_URL. When present, storage override is ignored. */
+export const BUILTIN_API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL?.trim().replace(/\/$/, "") ?? "";
+
+export const IS_API_BASE_URL_LOCKED = BUILTIN_API_BASE_URL.length > 0;
+
 export const MAX_LOCAL_LOG = 100;
 export const MAX_QUEUE_SIZE = 500;
 export const FLUSH_INTERVAL_MS = 30_000;
