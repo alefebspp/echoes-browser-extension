@@ -1,5 +1,26 @@
 # Echoes Browser Extension — Technical Overview
 
+## Install (early access)
+
+The extension isn't on the Chrome Web Store yet, so it's installed manually in developer mode. It works in Chrome, Edge, Brave and other Chromium browsers.
+
+1. Download [`echoes-extension.zip`](https://github.com/alefebspp/echoes-browser-extension/releases/latest/download/echoes-extension.zip) and unzip it somewhere you'll keep — Chrome loads it from that folder.
+2. Open `chrome://extensions` and turn on **Developer mode** (top-right).
+3. Click **Load unpacked** and select the unzipped `echoes-extension` folder.
+4. Click the Echoes icon, give consent, turn tracking on, and sign in with your Echoes account.
+
+To update, download the new zip, replace the folder's contents, and click the reload icon on the extension's card.
+
+## Releasing
+
+Releases are built by `.github/workflows/release.yml`:
+
+1. Set the repository variable `VITE_API_BASE_URL` to the production API URL (once).
+2. Bump `version` in `manifest.json` (and `package.json`).
+3. Commit, then push a matching tag: `git tag v0.1.1 && git push origin v0.1.1`.
+
+The workflow builds the extension and attaches `echoes-extension.zip` to a GitHub release.
+
 ## Purpose
 
 The Echoes Browser Extension is responsible for capturing user browsing activity and sending structured events to the Echoes Engine backend. Its primary role is to act as a lightweight event source, allowing the platform to build a digital memory timeline and identify behavioral patterns over time.

@@ -1,0 +1,60 @@
+name: Release
+
+# Push a tag like `v0.1.1` (matching manifest.json "version") to publish a
+# ready-to-install zip. The frontend links to
+# releases/latest/download/echoes-extension.zip, so the newest release is
+# always what users download.
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Check the tag matches manifest.json
+        run: |
+          manifest_version="$(node -p "require('./manifest.json').version")"
+          if [ "v${manifest_version}" != "${GITHUB_REF_NAME}" ]; then
+            echo "::error::Tag ${GITHUB_REF_NAME} does not match manifest.json version ${manifest_version}"
+            exit 1
+          fi
+
+      - name: Check the API URL is configured
+        env:
+          VITE_API_BASE_URL: ${{ vars.VITE_API_BASE_URL }}
+        run: |
+          if [ -z "${VITE_API_BASE_URL}" ]; then
+            echo "::error::Set the VITE_API_BASE_URL repository variable (Settings → Secrets and variables → Actions → Variables)"
+            exit 1
+          fi
+
+      - run: npm ci
+
+      - name: Build
+        env:
+          VITE_API_BASE_URL: ${{ vars.VITE_API_BASE_URL }}
+        run: npm run build
+
+      # Unzipping yields an `echoes-extension/` folder with manifest.json at its
+      # root — the folder users pick in "Load unpacked".
+      - name: Package
+        run: |
+          rm -rf echoes-extension
+          cp -r dist echoes-extension
+          zip -qr echoes-extension.zip echoes-extension
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: echoes-extension.zip
+          generate_release_notes: true
